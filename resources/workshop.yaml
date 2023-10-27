@@ -1,0 +1,43 @@
+apiVersion: training.educates.dev/v1beta1
+kind: Workshop
+metadata:
+  name: "neural"
+spec:
+  title: "Improving search with Neural Networks"
+  description: "Workshop description."
+  publish:
+    image: "$(image_repository)/neural-files:$(workshop_version)"
+  workshop:
+    files:
+    - image:
+        url: "$(image_repository)/neural-files:$(workshop_version)"
+      includePaths:
+      - /workshop/**
+      - /exercises/**
+      - /README.md
+  session:
+    ingresses:
+    - name: search
+      port: 8000
+    namespaces:
+      budget: medium
+    applications:
+      terminal:
+        enabled: true
+      editor:
+        enabled: true
+      console:
+        enabled: false
+      docker:
+        enabled: true
+        compose:
+          services:
+            qdrant-workshop:
+              image: qdrant/qdrant
+              ports:
+              - "127.0.0.1:6333:6333"
+              - "127.0.0.1:6334:6334"              
+      registry:
+        enabled: false
+      vcluster:
+        enabled: false
